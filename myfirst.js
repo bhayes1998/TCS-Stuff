@@ -1,8 +1,7 @@
-
-const fetch = require('node-fetch');
-document.getElementById('btn').addEventListener("click", getMovieStuff());
+//document.getElementById('btn').addEventListener("click", getMovieStuff());
 
 function getMovieStuff(title){
+ 
   fetch("https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/" + title, {
     method: 'GET',
     headers: {
@@ -13,7 +12,19 @@ function getMovieStuff(title){
   })
   .then(res => res.json())
   .then(data => {
-    document.getElementById('output').innerHTML = data.titles[0].title;
-    console.log(data.titles[0].title);
+    var titleList = "Movies: ";
+    var companyList = "Companies: ";
+    var namesList = "Actors: ";
+    for (var i = 0; i < data.companies.length; i++){
+      companyList += data.companies[i].title + ", ";
+    }
+    for (var i = 0; i < data.titles.length; i++){
+      titleList += data.titles[i].title + ", ";
+    }
+    for (var i = 0; i < data.names.length; i++){
+      namesList += data.names[i].title + ", ";
+    }
+    console.log(data);
+    document.getElementById('output').innerHTML = titleList + "<br>" + namesList + "<br>" + companyList;
   });
 }
