@@ -1,70 +1,57 @@
-//document.getElementById('btn').addEventListener("click", getMovieStuff());
-
-// const express = require('express');
-// const bp = require('body-parser')
-// const fs = require('fs');
-
-// const app = express();
-// app.use(bp());
-
-// const configz = JSON.parse(fs.readFileSync("./configs.json", "utf-8"));
-// const PORT = configz.PORT;
-
-// app.post('/', (req, res) => {
-
-//   console.log(req)
-//   if (req.params.id) {
-//       console.log(`request recieved, printing params now...`)
-//       console.log(req.params.id)
-//       res.status(200).send({message: 'request recieved'});
-//   }
-//   else
-//       res.status(500).send({message: 'error: was expecting a message body'})
-// })
-
-// // app.get('https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/inception', function (req, res) {
-// //   res.send('hello world')
-// // });
-
-// var server = app.listen(PORT, () => console.log('server is up at port ' + PORT));
-
 const express = require('express');
 const bp = require('body-parser')
 const fs = require('fs');
-
-
+const fetch = require('node-fetch');
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb://localhost:27017/mydb";
 const app = express();
-
-
-app.use(bp())
-
-// good habit to start now, setting up config files in the root of the repo
 const configz = JSON.parse(fs.readFileSync('./configs.json', 'utf-8'))
 const PORT = configz.PORT;
 
+app.use(bp.json())
+
+// good habit to start now, setting up config files in the root of the repo
+
+var stuff = [];
 
 app.post('/', (req, res) => {
-    console.log("Bryan Hayes is a buffoon")
-    console.log(req)
-    if (req.params.id) {
-        console.log(`request recieved, printing params now...`)
-        console.log(req.params.id)
-        res.status(200).send({message: 'request recieved'});
-    }
-    else
-        res.status(500).send({message: 'error: was expecting a message body'})
+    //res.status(200).send({message: 'Bryan Hayes is a big buffoon'});
+    MongoClient.connect(url, function(err, db) {
+	if (err) throw err;
+  	var dbo = db.db("mydb");
+  	dbo.collection("movies").insertOne(req.body, function(err, res){
+    	if (err) throw err;
+    	console.log("yay!");
+    	db.close();
+		});
+	});
+    res.send("Added");
 })
-
-
-
-app.get('movie-database-imdb-alternative.p.rapidapi.com',(request, response) => {
-    response.status(200).send({ message: 'hello world' })
-})
-
-
 
 app.listen(PORT, () => console.log(`server is up at port ${PORT}`))
-
+// var test = {
+// 	title: "The Thing",
+// 	year: "1982",
+// 	rated: "R",
+// 	released: "25 June 1982",
+// 	runtime: "102 min",
+// 	genre: "Horror, Sci-Fi",
+// 	director: "John Carpenter",
+// 	writer: "No Idea",
+// 	Actors: "Kurt Russell, Keith David, Wilford Brimley",
+// 	Plot: "Alien, Antarctica, scary, oooh, aaah",
+// 	language: "English",
+// 	country: "USA",
+// 	awards: "Razzie maybe",
+// 	poster: "https://m.media-amazon.com/images/M/MV5BNGViZWZmM2EtNGYzZi00ZDAyLTk3ODMtNzIyZTBjN2Y1NmM1XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SY1000_CR0,0,666,1000_AL_.jpg0",
+// 	metascore: "100",
+// 	imbdRating: "100",
+// 	imdbVotes: "1",
+// 	imdbID: "dunno",
+// 	type: "movie", 
+// 	response: "true",
+// 	images: null
+// };
 
 
 // function getMovieStuff(title){
