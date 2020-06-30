@@ -19,9 +19,11 @@ app.post('/', (req, res) => {
     MongoClient.connect(url, function(err, db) {
 	if (err) throw err;
   	var dbo = db.db("mydb");
-  	dbo.collection("movies").insertOne(req.body, function(err, res){
-    	if (err) throw err;
-    	console.log("yay!");
+  	dbo.collection("movies").find({}).toArray(function(err, res){
+		if (err) throw err;
+		stuff = res;
+		console.log("yay!");
+		console.log(stuff);
     	db.close();
 		});
 	});
