@@ -14,11 +14,11 @@ class App extends React.Component{
   render(){
     return (
       <div>
-        <ul>
+        <div class="list-group">
           {this.state.movies.map(movies =>
-            <li key={movies.id}>{movies.title}</li>
+            <a href="#" class="list-group-item list-group-item-action" key={movies.id}>{movies.title}</a>
             )}
-        </ul>
+        </div>
       </div>
     )
   }
